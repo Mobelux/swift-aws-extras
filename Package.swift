@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "swift-aws-extras",
+    platforms: [.macOS(.v12)],
     products: [
         .library(name: "EmailSender", targets: ["EmailSender"]),
         .library(name: "Persistence", targets: ["Persistence"])

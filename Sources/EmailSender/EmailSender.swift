@@ -23,6 +23,31 @@ public struct EmailSender {
     }
 }
 
+public extension EmailSender {
+    /// Returns a live implementation.
+    ///
+    /// - Parameter sesClient: The `SESClient` used to send emails.
+    /// - Returns: A live implementation of an email sender.
+    static func live(sesClient: SESClient) -> Self {
+        .init(send: { recipents, sender, subject, body in
+            let email = SendEmailInput(
+                destination: SESClientTypes.Destination(
+                    toAddresses: recipents
+                ),
+                message: SESClientTypes.Message(
+                    body: SESClientTypes.Body(body),
+                    subject: SESClientTypes.Content(data: subject)
+                ),
+                replyToAddresses: nil,
+                returnPath: nil,
+                source: sender
+            )
+
+            return try await sesClient.sendEmail(input: email).messageId
+        })
+    }
+}
+
 /// A type that creates ``EmailSender`` instances.
 public struct EmailSenderFactory {
     /// A closure that creates and returns an ``EmailSender`` instance.
@@ -41,22 +66,7 @@ public extension EmailSenderFactory {
     static var live: Self {
         .init(make: {
             let sesClient = try await SESClient()
-            return EmailSender(send: { recipents, sender, subject, body in
-                let email = SendEmailInput(
-                    destination: SESClientTypes.Destination(
-                        toAddresses: recipents
-                    ),
-                    message: SESClientTypes.Message(
-                        body: SESClientTypes.Body(body),
-                        subject: SESClientTypes.Content(data: subject)
-                    ),
-                    replyToAddresses: nil,
-                    returnPath: nil,
-                    source: sender
-                )
-
-                return try await sesClient.sendEmail(input: email).messageId
-            })
+            return EmailSender.live(sesClient: sesClient)
         })
     }
 }

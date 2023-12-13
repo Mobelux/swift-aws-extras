@@ -1,5 +1,4 @@
 name: Tests
-
 on:
   workflow_call:
   workflow_dispatch:
@@ -14,9 +13,9 @@ on:
 
 jobs:
   unit_tests:
-    if: github.event.pull_request.draft == false
     name: Run Tests
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout

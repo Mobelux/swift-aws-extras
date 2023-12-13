@@ -74,7 +74,6 @@ jobs:
               ref: 'refs/tags/${{ steps.bump.outputs.version }}',
               sha: context.sha
             })
-
 ```
 
 ## Acknowledgments

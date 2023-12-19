@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "Persistence", targets: ["Persistence"])
     ],
     dependencies: [
-        .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "0.19.0")
+        .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "0.19.0")
     ],
     targets: [
         .target(

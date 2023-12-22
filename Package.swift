@@ -8,7 +8,8 @@ let package = Package(
     platforms: [.macOS(.v12)],
     products: [
         .library(name: "EmailSender", targets: ["EmailSender"]),
-        .library(name: "Persistence", targets: ["Persistence"])
+        .library(name: "Persistence", targets: ["Persistence"]),
+        .library(name: "Secrets", targets: ["Secrets"])
     ],
     dependencies: [
         .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "0.19.0")
@@ -26,6 +27,13 @@ let package = Package(
                 .product(name: "AWSDynamoDB", package: "aws-sdk-swift")
             ]
         ),
+        .target(
+            name: "Secrets",
+            dependencies: [
+                .product(name: "AWSSecretsManager", package: "aws-sdk-swift")
+            ]
+        ),
+        // MARK: - Tests
         .testTarget(
             name: "EmailSenderTests",
             dependencies: ["EmailSender"]
@@ -33,6 +41,10 @@ let package = Package(
         .testTarget(
             name: "PersistenceTests",
             dependencies: ["Persistence"]
+        ),
+        .testTarget(
+            name: "SecretsTests",
+            dependencies: ["Secrets"]
         )
     ]
 )

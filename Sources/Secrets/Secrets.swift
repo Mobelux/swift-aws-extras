@@ -47,7 +47,7 @@ public struct Secret {
 }
 
 extension Secret {
-    /// Creates a new intance.
+    /// Creates a new instance.
     ///
     /// - Parameter secretValue: A secret value.
     init<V: SecretValue>(_ secretValue: V) throws {
@@ -57,7 +57,7 @@ extension Secret {
 
         self.arn = arn
         self.name = name
-        if let string = secretValue.secretString  {
+        if let string = secretValue.secretString {
             self.value = .string(string)
         } else if let data = secretValue.secretBinary {
             self.value = .binary(data)
@@ -145,7 +145,7 @@ public extension Secrets {
                 let batchInput = BatchGetSecretValueInput(secretIdList: secretIDs)
                 return try await client.batchGetSecretValue(input: batchInput)
                     .secretValues?
-                    .map { try Secret($0)}
+                    .map { try Secret($0) }
             })
     }
 }

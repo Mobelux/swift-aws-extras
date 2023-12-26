@@ -97,3 +97,55 @@ extension Optional {
         }
     }
 }
+
+/// A type that retrieves secrets.
+public struct Secrets {
+    /// The ARN or name of the secret to retrieve.
+    public typealias ID = String
+
+    /// A closure returning the secret string for the given identifier.
+    var string: @Sendable (ID) async throws -> String
+
+    /// A closure returning the secret data for the given identifier.
+    var data: @Sendable (ID) async throws -> Data
+
+    /// A closure returning secrets for the given identifiers.
+    var batch: @Sendable ([ID]) async throws -> [Secret]?
+
+    public init(
+        string: @escaping @Sendable (Secrets.ID) async throws -> String,
+        data: @escaping @Sendable (Secrets.ID) async throws -> Data,
+        batch: @escaping @Sendable ([Secrets.ID]) async throws -> [Secret]?
+    ) {
+        self.string = string
+        self.data = data
+        self.batch = batch
+    }
+}
+
+public extension Secrets {
+    /// Returns a live implementation.
+    ///
+    /// - Parameter region: The AWS region of the secrets manager.
+    /// - Returns: A live instance.
+    static func live(region: String) throws -> Self {
+        let client = try SecretsManagerClient(region: region)
+        return Secrets(
+            string: { id in
+                try await client.getSecretValue(input: GetSecretValueInput(secretId: id))
+                    .secretString
+                    .unwrap(or: SecretsError.wrongSecretType)
+            },
+            data: { id in
+                try await client.getSecretValue(input: GetSecretValueInput(secretId: id))
+                    .secretBinary
+                    .unwrap(or: SecretsError.wrongSecretType)
+            },
+            batch: { secretIDs in
+                let batchInput = BatchGetSecretValueInput(secretIdList: secretIDs)
+                return try await client.batchGetSecretValue(input: batchInput)
+                    .secretValues?
+                    .map { try Secret($0)}
+            })
+    }
+}

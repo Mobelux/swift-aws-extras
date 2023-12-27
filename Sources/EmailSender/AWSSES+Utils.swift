@@ -1,5 +1,5 @@
 //
-//  Extensions.swift
+//  AWSSES+Utils.swift
 //  AWSExtras
 //
 //  Created by Mathew Gacy on 12/8/23.
@@ -29,4 +29,3 @@ extension SESClientTypes.Body {
         self.init(html: html, text: text)
     }
 }
-

@@ -1,5 +1,5 @@
 //
-//  Extensions.swift
+//  AWSDynamoDB+Utils.swift
 //  AWSExtras
 //
 //  Created by Mathew Gacy on 12/8/23.

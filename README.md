@@ -26,6 +26,7 @@ Where `<product>` is one of the following:
 
 - `EmailSender`
 - `Persistence`
+- `Secrets`
 
 ## ⚙️ Usage
 
@@ -92,4 +93,33 @@ Persist a model instance:
 ```swift
 let model = MyModel(name: "foo", value: 42)
 try await persistence.put(model)
+```
+
+### 🗝️ Secrets
+
+Initialize `Secrets` with a region:
+
+```swift
+let secrets = Secrets.live(region: "us-east-1")
+```
+
+Retrieve a secret string by its id:
+
+```swift
+let secret = try await secrets.string("my-secret-id")
+```
+
+Retrieve secret data by its id:
+
+```swift
+let secret = try await secrets.data("my-secret-id")
+```
+
+Retrieve multiple secrets:
+
+```swift
+let secrets = try await secrets.batch([
+    "my-secret-id",
+    "my-other-secret-id"
+])
 ```

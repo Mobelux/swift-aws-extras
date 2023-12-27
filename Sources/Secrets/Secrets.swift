@@ -149,3 +149,28 @@ public extension Secrets {
             })
     }
 }
+
+/// A type that creates ``Secrets`` instances.
+public struct SecretsFactory: Sendable {
+    /// The region where the secrets manager is located.
+    public typealias Region = String
+
+    /// A closure that creates and returns a ``Secrets`` instance.
+    public var make: @Sendable (Region) throws -> Secrets
+
+    /// Creates an instance.
+    ///
+    /// - Parameter make: A closure returning a ``Secrets`` instance.
+    public init(
+        make: @escaping @Sendable (SecretsFactory.Region) throws -> Secrets
+    ) {
+        self.make = make
+    }
+}
+
+public extension SecretsFactory {
+    /// Returns a live implementation.
+    static func live() -> Self {
+        .init(make: { try Secrets.live(region: $0 ) })
+    }
+}

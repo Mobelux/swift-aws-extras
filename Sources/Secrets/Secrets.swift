@@ -9,10 +9,10 @@ import AWSSecretsManager
 import Foundation
 
 /// A secret stored by AWS Secrets Manager.
-public struct Secret {
+public struct Secret: Equatable, Sendable {
 
     /// A secret stored by AWS Secrets Manager.
-    public enum Value {
+    public enum Value: Equatable, Sendable {
         /// The decrypted secret value, if the secret value was originally provided as binary data in
         /// the form of a byte array.
         case binary(Data)
@@ -99,7 +99,7 @@ extension Optional {
 }
 
 /// A type that retrieves secrets.
-public struct Secrets {
+public struct Secrets: Sendable {
     /// The ARN or name of the secret to retrieve.
     public typealias ID = String
 

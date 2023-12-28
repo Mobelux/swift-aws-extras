@@ -15,25 +15,6 @@ let package = Package(
         .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "0.19.0")
     ],
     targets: [
-        .target(
-            name: "EmailSender",
-            dependencies: [
-                .product(name: "AWSSES", package: "aws-sdk-swift")
-            ]
-        ),
-        .target(
-            name: "Persistence",
-            dependencies: [
-                .product(name: "AWSDynamoDB", package: "aws-sdk-swift")
-            ]
-        ),
-        .target(
-            name: "Secrets",
-            dependencies: [
-                .product(name: "AWSSecretsManager", package: "aws-sdk-swift")
-            ]
-        ),
-        // MARK: - Tests
         .testTarget(
             name: "EmailSenderTests",
             dependencies: ["EmailSender"]
@@ -48,3 +29,33 @@ let package = Package(
         )
     ]
 )
+
+let genericTargets: [Target] = [
+    .target(
+        name: "EmailSender",
+        dependencies: [
+            .product(name: "AWSSES", package: "aws-sdk-swift")
+        ]
+    ),
+    .target(
+        name: "Persistence",
+        dependencies: [
+            .product(name: "AWSDynamoDB", package: "aws-sdk-swift")
+        ]
+    ),
+    .target(
+        name: "Secrets",
+        dependencies: [
+            .product(name: "AWSSecretsManager", package: "aws-sdk-swift")
+        ]
+    )
+]
+
+#if os(macOS)
+package.dependencies.append(.package(url: "https://github.com/realm/SwiftLint.git", exact: "0.54.0"))
+for target in genericTargets {
+    target.plugins = [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]
+}
+#endif
+
+package.targets.append(contentsOf: genericTargets)

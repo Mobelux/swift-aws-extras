@@ -31,7 +31,7 @@ public struct Persistence {
     /// Persists the given value.
     ///
     /// - Parameter contact: The value to persist.
-    public func put<T: AttributeValueConvertible>(_ value: T) async throws -> Void {
+    public func put<T: AttributeValueConvertible>(_ value: T) async throws {
         try await put(value.attributes)
     }
 }
@@ -72,7 +72,7 @@ public extension PersistenceFactory {
             if let attributeProvider {
                 inputProvider = { attributes in
                     PutItemInput(
-                        item: try attributes.merging(attributeProvider()) { (_, new) in new },
+                        item: try attributes.merging(attributeProvider()) { _, new in new },
                         tableName: tableName
                     )
                 }

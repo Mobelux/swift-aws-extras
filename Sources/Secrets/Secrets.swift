@@ -25,13 +25,13 @@ public struct Secret: Equatable, Sendable {
     }
 
     /// The ARN of the secret.
-    var arn: String
+    public var arn: String
 
     /// The friendly name of the secret.
-    var name: String
+    public var name: String
 
     /// The decrypted secret value.
-    var value: Value
+    public var value: Value
 
     /// Creates a new instance.
     ///
@@ -104,13 +104,13 @@ public struct Secrets: Sendable {
     public typealias ID = String
 
     /// A closure returning the secret string for the given identifier.
-    var string: @Sendable (ID) async throws -> String
+    public var string: @Sendable (ID) async throws -> String
 
     /// A closure returning the secret data for the given identifier.
-    var data: @Sendable (ID) async throws -> Data
+    public var data: @Sendable (ID) async throws -> Data
 
     /// A closure returning secrets for the given identifiers.
-    var batch: @Sendable ([ID]) async throws -> [Secret]?
+    public var batch: @Sendable ([ID]) async throws -> [Secret]?
 
     public init(
         string: @escaping @Sendable (Secrets.ID) async throws -> String,

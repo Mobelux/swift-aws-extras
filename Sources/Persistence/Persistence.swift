@@ -16,23 +16,33 @@ public typealias AttributeValue = DynamoDBClientTypes.AttributeValue
 
 /// A type that persists collections of attributes.
 public struct Persistence {
+    /// A closure to modify the attributes of persisted values.
+    ///
+    /// Use this to add additional attributes like a timestamp or to perform validation of all
+    /// persisted values.
+    var attributeModifier: @Sendable ([String: AttributeValue]) throws -> [String: AttributeValue]
+
     /// A closure to create a new item or replace an old item with a new one.
     var put: @Sendable ([String: AttributeValue]) async throws -> Void
 
     /// Creates an instance.
     ///
-    /// - Parameter put: A closure to persist item attributes.
+    /// - Parameters:
+    ///   - put: A closure to persist item attributes.
+    ///   - attributeModifier: A closure to modify the attributes of all persisted values.
     public init(
-        put: @escaping @Sendable ([String: AttributeValue]) async throws -> Void
+        put: @escaping @Sendable ([String: AttributeValue]) async throws -> Void,
+        attributeModifier: @escaping @Sendable ([String: AttributeValue]) throws -> [String: AttributeValue] = { $0 }
     ) {
         self.put = put
+        self.attributeModifier = attributeModifier
     }
 
     /// Persists the given value.
     ///
     /// - Parameter contact: The value to persist.
     public func put<T: AttributeValueConvertible>(_ value: T) async throws {
-        try await put(value.attributes)
+        try await put(try attributeModifier(value.attributes))
     }
 }
 
@@ -60,27 +70,15 @@ public struct PersistenceFactory {
 public extension PersistenceFactory {
     /// Returns a live implementation.
     ///
-    /// - Parameter attributeProvider: An optional closure returning additional attributes to any
-    /// values that are persisted.
+    /// - Parameter attributeModifier: A closure to modify the attributes of persisted values.
     static func live(
-        additionalAttributes attributeProvider: (() throws -> [String: AttributeValue])? = nil
+        attributeModifier: @escaping @Sendable ([String: AttributeValue]) throws -> [String: AttributeValue] = { $0 }
     ) -> Self {
         .init(make: { region, tableName in
             let dbClient = try DynamoDBClient(region: region)
-
-            let inputProvider: ([String: AttributeValue]) throws -> PutItemInput
-            if let attributeProvider {
-                inputProvider = { attributes in
-                    PutItemInput(
-                        item: try attributes.merging(attributeProvider()) { _, new in new },
-                        tableName: tableName
-                    )
-                }
-            } else {
-                inputProvider = { PutItemInput(item: $0, tableName: tableName) }
-            }
-
-            return Persistence(put: { _ = try await dbClient.putItem(input: inputProvider($0)) })
+            return Persistence(
+                put: { _ = try await dbClient.putItem(input: PutItemInput(item: $0, tableName: tableName)) },
+                attributeModifier: attributeModifier)
         })
     }
 }

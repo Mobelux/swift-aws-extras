@@ -46,6 +46,24 @@ public struct Persistence {
     }
 }
 
+public extension Persistence {
+    /// Returns an instance that adds a `CreatedAt` timestamp from the given `TimeStampProvider` to
+    /// all persisted entities.
+    ///
+    /// - Parameters:
+    ///   - timestampProvider: A timestamp provider.
+    ///   - put: A closure to persist item attributes.
+    /// - Returns: A `Persistence` instance.
+    static func addingTimestamp(
+        from timestampProvider: TimestampProvider,
+        put: @escaping @Sendable ([String: AttributeValue]) async throws -> Void
+    ) -> Self {
+        .init(
+            put: put,
+            attributeModifier: { $0.merging(["CreatedAt": .s(timestampProvider.timestamp())]) { _, new in new } })
+    }
+}
+
 /// A type that creates ``Persistence`` instances.
 public struct PersistenceFactory {
     /// The region where the table is located.

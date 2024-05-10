@@ -10,7 +10,39 @@ import Foundation
 import XCTest
 
 final class PersistenceTests: XCTestCase {
+
+    struct Model: Codable, Equatable, AttributeValueConvertible {
+        let bool: Bool
+        let string: String
+
+        var attributes: [String: AttributeValue] {
+            var values: [CodingKeys: AttributeValue] = [
+                .bool: .bool(bool),
+                .string: .s(string)
+            ]
+
+            return values.attributeValues()
+        }
+    }
+
     func testPersistence() async throws {
-        // ...
+        let expected: [String: AttributeValue] = [
+            "Bool": .bool(true),
+            "CreatedAt": .s("1970-01-01T00:00:00Z"),
+            "String": .s("string")
+        ]
+
+        let timestampProvider = TimestampProvider(
+            dateProvider: { Date(timeIntervalSince1970: 0) },
+            formatter: ISO8601DateFormatter())
+
+        let expectation = expectation(description: "Model persisted")
+        let sut = Persistence.addingTimestamp(from: timestampProvider) { actual in
+            XCTAssertEqual(actual, expected)
+            expectation.fulfill()
+        }
+
+        try await sut.put(Model(bool: true, string: "string"))
+        await fulfillment(of: [expectation])
     }
 }

@@ -16,14 +16,15 @@ final class PersistenceTests: XCTestCase {
         let string: String
 
         var attributes: [String: AttributeValue] {
-            var values: [CodingKeys: AttributeValue] = [
+            let values: [CodingKeys: AttributeValue] = [
                 .bool: .bool(bool),
                 .string: .s(string)
             ]
-
             return values.attributeValues()
         }
     }
+
+    let timeoutInterval: TimeInterval =  0.1
 
     func testPersistence() async throws {
         let expected: [String: AttributeValue] = [
@@ -43,6 +44,6 @@ final class PersistenceTests: XCTestCase {
         }
 
         try await sut.put(Model(bool: true, string: "string"))
-        await fulfillment(of: [expectation])
+        await fulfillment(of: [expectation], timeout: timeoutInterval)
     }
 }

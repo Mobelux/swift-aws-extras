@@ -51,16 +51,18 @@ public extension Persistence {
     /// all persisted entities.
     ///
     /// - Parameters:
+    ///   - timestampName: The name of the timestamp attribute.
     ///   - timestampProvider: A timestamp provider.
     ///   - put: A closure to persist item attributes.
     /// - Returns: A `Persistence` instance.
     static func addingTimestamp(
+        named timestampName: String,
         from timestampProvider: TimestampProvider,
         put: @escaping @Sendable ([String: AttributeValue]) async throws -> Void
     ) -> Self {
         .init(
             put: put,
-            attributeModifier: { $0.merging(["CreatedAt": .s(timestampProvider.timestamp())]) { _, new in new } })
+            attributeModifier: { $0.merging([timestampName: .s(timestampProvider.timestamp())]) { _, new in new } })
     }
 }
 

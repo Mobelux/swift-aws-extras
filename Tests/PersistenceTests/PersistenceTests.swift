@@ -37,7 +37,7 @@ final class PersistenceTests: XCTestCase {
             formatter: ISO8601DateFormatter())
 
         let expectation = expectation(description: "Model persisted")
-        let sut = Persistence.addingTimestamp(from: timestampProvider) { actual in
+        let sut = Persistence.addingTimestamp(named: "CreatedAt", from: timestampProvider) { actual in
             XCTAssertEqual(actual, expected)
             expectation.fulfill()
         }

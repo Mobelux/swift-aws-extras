@@ -67,7 +67,7 @@ public extension Persistence {
 }
 
 /// A type that creates ``Persistence`` instances.
-public struct PersistenceFactory {
+public struct PersistenceFactory: Sendable {
     /// The region where the table is located.
     public typealias Region = String
 

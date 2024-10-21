@@ -8,7 +8,7 @@
 import Foundation
 
 /// A class of types providing user-readable representations of dates.
-public protocol DateFormatting {
+public protocol DateFormatting: Sendable {
     /// Returns a string representation of the specified date.
     ///
     /// - Parameter date: The date to be represented.
@@ -21,8 +21,8 @@ extension DateFormatter: DateFormatting {}
 extension ISO8601DateFormatter: DateFormatting {}
 
 /// A type to provide timestamps.
-public struct TimestampProvider {
-    private let dateProvider: () -> Date
+public struct TimestampProvider: Sendable {
+    private let dateProvider: @Sendable () -> Date
     private let formatter: any DateFormatting
 
     /// Creates an instance.
@@ -31,7 +31,7 @@ public struct TimestampProvider {
     ///   - dateProvider: A closure returning the current date.
     ///   - formatter: The date formatter to use to format the current date.
     public init(
-        dateProvider: @escaping () -> Date,
+        dateProvider: @escaping @Sendable () -> Date,
         formatter: DateFormatting
     ) {
         self.dateProvider = dateProvider

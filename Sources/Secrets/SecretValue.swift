@@ -32,6 +32,22 @@ protocol SecretValue: Equatable {
     var secretString: String? { get }
 }
 
+extension GetSecretValueOutput: @retroactive Equatable {
+    public static func == (lhs: GetSecretValueOutput, rhs: GetSecretValueOutput) -> Bool {
+        lhs.arn == rhs.arn
+        && lhs.name == rhs.name
+        && lhs.secretBinary == rhs.secretBinary
+        && lhs.secretString == rhs.secretString
+    }
+}
 extension GetSecretValueOutput: SecretValue {}
 
+extension SecretsManagerClientTypes.SecretValueEntry: @retroactive Equatable {
+    public static func == (lhs: SecretsManagerClientTypes.SecretValueEntry, rhs: SecretsManagerClientTypes.SecretValueEntry) -> Bool {
+        lhs.arn == rhs.arn
+        && lhs.name == rhs.name
+        && lhs.secretBinary == rhs.secretBinary
+        && lhs.secretString == rhs.secretString
+    }
+}
 extension SecretsManagerClientTypes.SecretValueEntry: SecretValue {}

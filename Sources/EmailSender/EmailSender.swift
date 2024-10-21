@@ -5,11 +5,11 @@
 //  Created by Mathew Gacy on 12/8/23.
 //
 
-import AWSSES
+@preconcurrency import AWSSES
 import Foundation
 
 /// A type that sends emails.
-public struct EmailSender {
+public struct EmailSender: Sendable {
     /// A closure returning a message ID after sending an email.
     public var send: @Sendable (Recipients, Sender, Subject, Body) async throws -> MessageID?
 

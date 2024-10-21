@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "Secrets", targets: ["Secrets"])
     ],
     dependencies: [
-        .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "0.19.0")
+        .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "1.0.0")
     ],
     targets: [
         .testTarget(

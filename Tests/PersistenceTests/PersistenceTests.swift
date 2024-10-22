@@ -24,7 +24,7 @@ final class PersistenceTests: XCTestCase {
         }
     }
 
-    let timeoutInterval: TimeInterval =  0.1
+    let timeoutInterval: TimeInterval = 0.1
 
     func testPersistence() async throws {
         let expected: [String: AttributeValue] = [

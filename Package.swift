@@ -51,10 +51,8 @@ let regularTargets: [Target] = [
     )
 ]
 
-#if os(macOS)
 for target in regularTargets {
     target.swiftSettings = [.enableExperimentalFeature("StrictConcurrency")]
 }
-#endif
 
 package.targets.append(contentsOf: regularTargets)

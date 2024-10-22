@@ -32,7 +32,7 @@ protocol SecretValue: Equatable {
     var secretString: String? { get }
 }
 
-extension GetSecretValueOutput: @retroactive Equatable {
+extension AWSSecretsManager.GetSecretValueOutput: Swift.Equatable {
     public static func == (lhs: GetSecretValueOutput, rhs: GetSecretValueOutput) -> Bool {
         lhs.arn == rhs.arn
         && lhs.name == rhs.name
@@ -42,7 +42,7 @@ extension GetSecretValueOutput: @retroactive Equatable {
 }
 extension GetSecretValueOutput: SecretValue {}
 
-extension SecretsManagerClientTypes.SecretValueEntry: @retroactive Equatable {
+extension AWSSecretsManager.SecretsManagerClientTypes.SecretValueEntry: Swift.Equatable {
     public static func == (lhs: SecretsManagerClientTypes.SecretValueEntry, rhs: SecretsManagerClientTypes.SecretValueEntry) -> Bool {
         lhs.arn == rhs.arn
         && lhs.name == rhs.name

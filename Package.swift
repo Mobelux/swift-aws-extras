@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "Secrets", targets: ["Secrets"])
     ],
     dependencies: [
-        .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "0.19.0")
+        .package(url: "https://github.com/awslabs/aws-sdk-swift.git", from: "1.0.0")
     ],
     targets: [
         .testTarget(
@@ -30,7 +30,7 @@ let package = Package(
     ]
 )
 
-let genericTargets: [Target] = [
+let regularTargets: [Target] = [
     .target(
         name: "EmailSender",
         dependencies: [
@@ -51,11 +51,8 @@ let genericTargets: [Target] = [
     )
 ]
 
-#if os(macOS)
-package.dependencies.append(.package(url: "https://github.com/realm/SwiftLint.git", exact: "0.54.0"))
-for target in genericTargets {
-    target.plugins = [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]
+for target in regularTargets {
+    target.swiftSettings = [.enableExperimentalFeature("StrictConcurrency")]
 }
-#endif
 
-package.targets.append(contentsOf: genericTargets)
+package.targets.append(contentsOf: regularTargets)

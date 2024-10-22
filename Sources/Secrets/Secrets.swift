@@ -5,7 +5,7 @@
 //  Created by Mathew Gacy on 12/22/23.
 //
 
-import AWSSecretsManager
+@preconcurrency import AWSSecretsManager
 import Foundation
 
 /// A secret stored by AWS Secrets Manager.

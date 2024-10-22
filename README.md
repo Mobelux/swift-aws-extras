@@ -4,7 +4,7 @@ Swifty helpers for working with the Swift [AWS SDK](https://github.com/awslabs/a
 
 ## 📱 Requirements
 
-Swift 5.7 toolchain with Swift Package Manager.
+Swift 5.9 toolchain with Swift Package Manager.
 
 ## 🖥 Installation
 

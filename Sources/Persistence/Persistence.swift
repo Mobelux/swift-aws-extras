@@ -5,7 +5,7 @@
 //  Created by Mathew Gacy on 12/8/23.
 //
 
-import AWSDynamoDB
+@preconcurrency import AWSDynamoDB
 import Foundation
 
 /// Represents the data for an attribute. Each attribute value is described as a name-value pair.
@@ -15,7 +15,7 @@ import Foundation
 public typealias AttributeValue = DynamoDBClientTypes.AttributeValue
 
 /// A type that persists collections of attributes.
-public struct Persistence {
+public struct Persistence: Sendable {
     /// A closure to modify the attributes of persisted values.
     ///
     /// Use this to add additional attributes like a timestamp or to perform validation of all
@@ -67,7 +67,7 @@ public extension Persistence {
 }
 
 /// A type that creates ``Persistence`` instances.
-public struct PersistenceFactory {
+public struct PersistenceFactory: Sendable {
     /// The region where the table is located.
     public typealias Region = String
 

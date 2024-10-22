@@ -30,7 +30,7 @@ let package = Package(
     ]
 )
 
-let genericTargets: [Target] = [
+let regularTargets: [Target] = [
     .target(
         name: "EmailSender",
         dependencies: [
@@ -52,11 +52,9 @@ let genericTargets: [Target] = [
 ]
 
 #if os(macOS)
-package.dependencies.append(.package(url: "https://github.com/realm/SwiftLint.git", exact: "0.54.0"))
-for target in genericTargets {
-    target.plugins = [.plugin(name: "SwiftLintPlugin", package: "SwiftLint")]
+for target in regularTargets {
     target.swiftSettings = [.enableExperimentalFeature("StrictConcurrency")]
 }
 #endif
 
-package.targets.append(contentsOf: genericTargets)
+package.targets.append(contentsOf: regularTargets)

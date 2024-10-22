@@ -17,7 +17,7 @@ final class TimestampProviderTests: XCTestCase {
 
         let sut = TimestampProvider(
             dateProvider: { Date(timeIntervalSince1970: 0) },
-            formatter: ISO8601DateFormatter())
+            formatter: DateFormatter.iso8601)
         let actual = sut.timestamp()
         XCTAssertEqual(actual, expected)
     }

@@ -16,9 +16,16 @@ public protocol DateFormatting: Sendable {
     func string(from date: Date) -> String
 }
 
-extension DateFormatter: DateFormatting {}
-
-extension ISO8601DateFormatter: DateFormatting {}
+extension DateFormatter: DateFormatting {
+    public static let iso8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+}
 
 /// A type to provide timestamps.
 public struct TimestampProvider: Sendable {
@@ -48,7 +55,7 @@ public extension TimestampProvider {
     /// A live implementation.
     static var live: Self {
         .init(
-            dateProvider: Date.init,
-            formatter: ISO8601DateFormatter())
+            dateProvider: { Date() },
+            formatter: DateFormatter.iso8601)
     }
 }

@@ -35,7 +35,7 @@ final class PersistenceTests: XCTestCase {
 
         let timestampProvider = TimestampProvider(
             dateProvider: { Date(timeIntervalSince1970: 0) },
-            formatter: ISO8601DateFormatter())
+            formatter: DateFormatter.iso8601)
 
         let expectation = expectation(description: "Model persisted")
         let sut = Persistence.addingTimestamp(named: "CreatedAt", from: timestampProvider) { actual in
